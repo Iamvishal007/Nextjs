@@ -62,13 +62,13 @@ export async function fetchCardData() {
          SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
          FROM invoices`;
 
-    const data = await Promise.all([
+    const data = await Promise.all([            //runs all three queries at the same time instead of waiting for one to finish before starting the next.
       invoiceCountPromise,
       customerCountPromise,
       invoiceStatusPromise,
     ]);
 
-    const numberOfInvoices = Number(data[0][0].count ?? '0');
+    const numberOfInvoices = Number(data[0][0].count ?? '0');            // ?? '0' ensures that if the value is null or undefined, it defaults to 0
     const numberOfCustomers = Number(data[1][0].count ?? '0');
     const totalPaidInvoices = formatCurrency(data[2][0].paid ?? '0');
     const totalPendingInvoices = formatCurrency(data[2][0].pending ?? '0');
